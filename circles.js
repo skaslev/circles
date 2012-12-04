@@ -70,6 +70,8 @@ var circ = {
     if (d_dot_Ri > 0)
       return [vec.nan(), vec.nan()];
     var q = Math.sqrt(r_i * r_i - vec.dot(Ri, Ri) + d_dot_Ri * d_dot_Ri);
+    if (isNaN(q))
+      return [vec.nan(), vec.nan()];
 
     var P_i = vec.clone(p);
     vec.mad(P_i, -d_dot_Ri - q, d);
