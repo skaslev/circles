@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var vec = {
   DIM: 2,
@@ -37,7 +37,7 @@ var vec = {
       r[i] = f * a[i];
   },
 
-  mad: function vec_mad(r, f, a) {
+  mad: function(r, f, a) {
     for (var i = 0; i < vec.DIM; i++)
       r[i] += f * a[i];
   },
