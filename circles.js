@@ -25,21 +25,25 @@ var vec = {
   add: function(r, a, b) {
     for (var i = 0; i < vec.DIM; i++)
       r[i] = a[i] + b[i];
+    return r;
   },
 
   sub: function(r, a, b) {
     for (var i = 0; i < vec.DIM; i++)
       r[i] = a[i] - b[i];
+    return r;
   },
 
   mul: function(r, f, a) {
     for (var i = 0; i < vec.DIM; i++)
       r[i] = f * a[i];
+    return r;
   },
 
   mad: function(r, f, a) {
     for (var i = 0; i < vec.DIM; i++)
       r[i] += f * a[i];
+    return r;
   },
 
   dot: function(a, b) {
@@ -65,24 +69,27 @@ var vec = {
 var circ = {
   Pi_Di: function(p, d, c_i, r_i) {
     var Ri = vec.zero();
-    vec.sub(Ri, p, c_i);
+    vec.sub(Ri, c_i, p);
     var d_dot_Ri = vec.dot(d, Ri);
-    if (d_dot_Ri > 0)
+    if (d_dot_Ri < 0)
       return [vec.nan(), vec.nan()];
     var q = Math.sqrt(r_i * r_i - vec.dot(Ri, Ri) + d_dot_Ri * d_dot_Ri);
     if (isNaN(q))
       return [vec.nan(), vec.nan()];
 
-    var P_i = vec.clone(p);
-    vec.mad(P_i, -d_dot_Ri - q, d);
+    var t = d_dot_Ri - q;
+    var td = vec.mad(vec.zero(), t, d);
+
+    var P_i = vec.zero();
+    vec.add(P_i, p, td);
 
     var P_i_sub_c_i = vec.zero();
     vec.sub(P_i_sub_c_i, P_i, c_i);
     var D_i = vec.clone(d);
     vec.mad(D_i, 2 * q / (r_i * r_i), P_i_sub_c_i);
 
-    //var tmp = vec.clone(Ri);
-    //vec.mad(tmp, -d_dot_Ri - q, d);
+    //var tmp = vec.clone(td);
+    //vec.sub(tmp, tmp, Ri);
     //var D_i = vec.clone(d);
     //vec.mad(D_i, 2 * q / (r_i * r_i), tmp);
 
